@@ -1,0 +1,18 @@
+Documenting my steps: 
+1.) edited .bashrc file to include 
+    '''
+    source /opt/ros/kinetic/setup.bash
+    '''
+2.) roscore 
+3.) $ export ROS_HOSTNAME=localhost
+    $ export ROS_MASTER_URI=http://localhost:11311
+
+TO RUN ROS STUFF
+1.) source /opt/ros/kinetic/setup.bash
+2.) roscore 
+3.) to run turtlesim: rosrun turtlesim turtlesim_node
+
+  // things I think I need to do:
+  // create a publisher for move command and send it to open manipulator 
+  // also create a subscriber 
+  // publish to the open manipulator topic
