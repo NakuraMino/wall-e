@@ -16,3 +16,8 @@ TO RUN ROS STUFF
   // create a publisher for move command and send it to open manipulator 
   // also create a subscriber 
   // publish to the open manipulator topic
+
+
+http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics#turtlesim
+rostopic list -v displays a list of topics to publish and subscribe to and their type
+rostopic -h all the available subcommands for rostopic 

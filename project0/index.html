@@ -12,7 +12,7 @@
   // Connecting to ROS
   // -----------------
   var ros = new ROSLIB.Ros({ 
-    url : 'ws://localhost:11311/' // This needs to be changed to whatever the correct url is 
+    url : 'ws://localhost:9090' // This needs to be changed to whatever the correct url is 
   });
   // var ros = new ROSLIB.Ros();
   // ros.connect('ws://localhost:11311');
@@ -20,51 +20,90 @@
 
   // Subscribing to a Topic
   // ------------------
-  var listener = new ROSLIB.Topic({
+  // var listener = new ROSLIB.Topic({
+  //   ros: ros,
+  //   name : '/listener',
+  //   messageType : 'std_msgs/String'
+  // });
+
+  // listener.subscribe(function(message) {
+  //   console.log('Received message on ' + listener.name + ': ' + message.data);
+  // });
+  
+  var poseListener = new ROSLIB.Topic({
     ros: ros,
-    name : '/listener',
-    messageType : 'std_msgs/String'
+    name : '/turtle1/pose',
+    messageType : 'turtlesim/Pose'
   });
 
-  listener.subscribe(function(message) {
-    console.log('Received message on ' + listener.name + ': ' + message.data);
+  poseListener.subscribe(function(message) {
+    console.log('Received message on ' + poseListener.name + ': ' + message.x);
   });
-  
+
   // Publishing a Topic
   // ------------------
 
   // publisher Topic object 
   var cmdVel = new ROSLIB.Topic({
     ros : ros,
-    name : '/cmd_vel',
+    name : '/turtle1/cmd_vel',
     messageType : 'geometry_msgs/Twist'
   });
   
-
-
-
+  // payload to be publish 
+  var twist = new ROSLIB.Message({
+    linear : {
+      x : 0,
+      y : 0,
+      z : 0
+    }, 
+    angular : {
+      x : 0,
+      y : 0,
+      z : 0
+    }
+  });
 
   function moveRight() {
-      // payload to be publish 
-    var twist = new ROSLIB.Message({
-      linear : {
-        x : 0.1,
-        y : 0,
-        z : 0
-      }, 
-      angular : {
-        x : 0,
-        y : 0,
-        z : 0
+    console.log("hi");
+    twist.linear.x = 0.1;
+    poseListener.subscribe(function(message) {
+      console.log('Received message on ' + poseListener.name + ': ' + message.x);
+      var x0 = message.x;
+      while (message.x - x0 < 1) {
+        cmdVel.publish(twist); 
       }
+      console.log('Received message on ' + poseListener.name + ': ' + message.x);
     });
-
-    // then you publish 
-    // need a while loop 
-    cmdVel.publish(twist); 
+    twist.linear.x = 0.0;
 
   }
 
+  function moveLeft() {
+    twist.linear.x = -0.1;
+    // then you publish 
+    // need a while loop 
+    cmdVel.publish(twist); 
+    twist.linear.x = 0.0;
+  }
+
+  function moveUp() {
+    twist.linear.y = 0.1;
+    // then you publish 
+    // need a while loop 
+    cmdVel.publish(twist);
+    twist.linear.y = 0.0;
+  }
+
+  function moveDown() {
+    twist.linear.y = -0.1;
+    // then you publish 
+    // need a while loop 
+    cmdVel.publish(twist);
+    twist.linear.y = 0.0;
+  }
+
+  moveRight();
 
 
 
