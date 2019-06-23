@@ -21,3 +21,6 @@ TO RUN ROS STUFF
 http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics#turtlesim
 rostopic list -v displays a list of topics to publish and subscribe to and their type
 rostopic -h all the available subcommands for rostopic 
+
+http://iguanatronics.com/simple-tutorial-on-rosbridge-and-roslibjs/
+roslaunch rosbridge_server rosbridge_websocket.launch 

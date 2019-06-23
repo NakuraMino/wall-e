@@ -14,30 +14,11 @@
   var ros = new ROSLIB.Ros({ 
     url : 'ws://localhost:9090' // This needs to be changed to whatever the correct url is 
   });
-  // var ros = new ROSLIB.Ros();
-  // ros.connect('ws://localhost:11311');
- 
-
-  // Subscribing to a Topic
-  // ------------------
-  // var listener = new ROSLIB.Topic({
-  //   ros: ros,
-  //   name : '/listener',
-  //   messageType : 'std_msgs/String'
-  // });
-
-  // listener.subscribe(function(message) {
-  //   console.log('Received message on ' + listener.name + ': ' + message.data);
-  // });
   
   var poseListener = new ROSLIB.Topic({
     ros: ros,
     name : '/turtle1/pose',
     messageType : 'turtlesim/Pose'
-  });
-
-  poseListener.subscribe(function(message) {
-    console.log('Received message on ' + poseListener.name + ': ' + message.x);
   });
 
   // Publishing a Topic
@@ -64,49 +45,56 @@
     }
   });
 
-  function moveRight() {
-    console.log("hi");
+  /*
+  function getX() {
+    var x = 0;
+    poseListener.subscribe(function(message) {
+      x = message.x;
+      console.log("message.x: " + message.x);
+      console.log("in method: " + x);
+      poseListener.unsubscribe();
+    });
+    return x;
+  }
+
+  function right() {
     twist.linear.x = 0.1;
     poseListener.subscribe(function(message) {
-      console.log('Received message on ' + poseListener.name + ': ' + message.x);
       var x0 = message.x;
-      while (message.x - x0 < 1) {
-        cmdVel.publish(twist); 
+      var x1 = message.x;
+      while (Math.abs(x1 - x0) < 1) {
+        cmdVel.publish(twist);
+        x1 = message.x; 
+        console.log(x1);
       }
-      console.log('Received message on ' + poseListener.name + ': ' + message.x);
+      poseListener.unsubscribe();
     });
-    twist.linear.x = 0.0;
+  }
+  */
 
+  function moveRight() {
+    twist.linear.x = 1;
+    cmdVel.publish(twist); 
+    twist.linear.x = 0.0;
   }
 
   function moveLeft() {
-    twist.linear.x = -0.1;
-    // then you publish 
-    // need a while loop 
+    twist.linear.x = -1;
     cmdVel.publish(twist); 
     twist.linear.x = 0.0;
   }
 
   function moveUp() {
-    twist.linear.y = 0.1;
-    // then you publish 
-    // need a while loop 
+    twist.linear.y = 1;
     cmdVel.publish(twist);
     twist.linear.y = 0.0;
   }
 
   function moveDown() {
-    twist.linear.y = -0.1;
-    // then you publish 
-    // need a while loop 
+    twist.linear.y = -1; 
     cmdVel.publish(twist);
     twist.linear.y = 0.0;
   }
-
-  moveRight();
-
-
-
 
 </script>
 
@@ -114,7 +102,10 @@
 </head>
 
 <body>
-
+  <button type="button" onclick="moveRight()">Right</button> 
+  <button type="button" onclick="moveLeft()">Left</button>
+  <button type="button" onclick="moveUp()">Up</button>
+  <button type="button" onclick="moveDown()">Down</button>
 </body>
 
 </html>
