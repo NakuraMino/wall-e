@@ -24,3 +24,6 @@ rostopic -h all the available subcommands for rostopic
 
 http://iguanatronics.com/simple-tutorial-on-rosbridge-and-roslibjs/
 roslaunch rosbridge_server rosbridge_websocket.launch 
+
+https://hackmd.io/E2B-3WUERsqbTMGwYJ29gw
+ht36v4
