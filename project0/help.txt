@@ -17,6 +17,21 @@ TO RUN ROS STUFF
   // also create a subscriber 
   // publish to the open manipulator topic
 
+http://emanual.robotis.com/docs/en/platform/openmanipulator_x/ros_controller_package/#rviz
+To run open manipulator:
+1. roscore (optional?)
+2. roslaunch rosbridge_server rosbridge_websocket.launch 
+3. roslaunch open_manipulator_gazebo open_manipulator_gazebo.launch
+4. roslaunch open_manipulator_controller open_manipulator_controller.launch
+5. roslaunch open_manipulator_control_gui open_manipulator_control_gui.launch
+
+service to send everything to: /open_manipulator/goal_joint_space_path_from_present
+
+2. rosrun rviz rviz (maybe can skip?)
+3. roslaunch open_manipulator_description open_manipulator_rviz.launch
+4. rostopic echo /joint_states
+
+
 
 http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics#turtlesim
 rostopic list -v displays a list of topics to publish and subscribe to and their type

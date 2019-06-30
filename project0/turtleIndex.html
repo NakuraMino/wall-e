@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+
+<script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.js"></script>
+
+<script type="text/javascript">
+
+  // global variables 
+  var PI = 3.1415926535897; // 90 degrees
+  var globalX = 0;
+  var globalY = 0;
+  var globalTheta = 0;
+
+  // Connecting to ROS
+  // -----------------
+  var ros = new ROSLIB.Ros({ 
+    url : 'ws://localhost:9090' // This needs to be changed to whatever the correct url is 
+  });
+  
+  var poseListener = new ROSLIB.Topic({
+    ros: ros,
+    name : '/turtle1/pose',
+    messageType : 'turtlesim/Pose'
+  });
+  
+  poseListener.subscribe(function(message) {
+      globalX = message.x;
+      globalY = message.y;
+      globalTheta = message.theta % (2 * PI);
+    });
+
+  // Publishing a Topic
+  // ------------------
+
+  // publisher Topic object 
+  var cmdVel = new ROSLIB.Topic({
+    ros : ros,
+    name : '/turtle1/cmd_vel',
+    messageType : 'geometry_msgs/Twist'
+  });
+  
+  // payload to be publish 
+  var twist = new ROSLIB.Message({
+    linear : {
+      x : 0,
+      y : 0,
+      z : 0
+    }, 
+    angular : {
+      x : 0,
+      y : 0,
+      z : 0
+    }
+  });
+
+  var rotSpeed = PI / 2;
+
+  function near(x, y) {
+    return Math.abs(Math.abs(x) - Math.abs(y)) < 0.2;
+  }
+
+  function rotateRight() {
+    twist.angular.z = -1 * rotSpeed;
+    cmdVel.publish(twist);
+    console.log(globalTheta);
+    twist.angular.z = 0;
+  }
+
+  function rotateLeft() {
+    twist.angular.z = rotSpeed;
+    cmdVel.publish(twist);
+    twist.angular.z = 0;
+  }
+
+  function rotateOpp() {
+    twist.angular.z = PI;
+    cmdVel.publish(twist);
+    twist.angular.z = 0;
+  }
+
+  function moveForward() {
+    twist.linear.x = 1;
+    cmdVel.publish(twist); 
+    twist.linear.x = 0.0;
+  }
+
+  function faceRight() {
+    if (globalTheta < -0.1) {
+      globalTheta = globalTheta + (PI * 2);
+    }
+    if (near(globalTheta, PI / 2)) {
+      rotateRight();
+    } else if (near(globalTheta, PI)) {
+      rotateOpp();
+    } else if (near(globalTheta, PI * 1.5)) {
+      rotateLeft();
+    }
+  }
+
+  function faceLeft() {
+    if (globalTheta < -0.1) {
+      globalTheta = globalTheta + (PI * 2);
+    }
+    if (near(globalTheta, PI / 2)) {
+      rotateLeft();
+    } else if (near(globalTheta, 0)) {
+      rotateOpp();
+    } else if (near(globalTheta, PI * 1.5)) {
+      rotateRight();
+    }
+  }
+
+  function faceUp() {
+    if (globalTheta < -0.1) {
+      globalTheta = globalTheta + (PI * 2);
+    }
+    if (near(globalTheta, PI)) {
+      rotateRight();
+    } else if (near(globalTheta, 0)) {
+      rotateLeft();
+    } else if (near(globalTheta, PI * 1.5)) {
+      rotateOpp();
+    }
+  }
+
+  function faceDown() {
+    if (globalTheta < -0.1) {
+      globalTheta = globalTheta + (PI * 2);
+    }
+    if (near(globalTheta, PI / 2)) {
+      rotateOpp();
+    } else if (near(globalTheta, 0)) {
+      rotateRight();
+    } else if (near(globalTheta, PI)) {
+      rotateLeft();
+    }
+  }
+
+
+</script>
+
+</head>
+
+<body>
+  <button type="button" onclick="moveForward()">move forward</button> 
+  <button type="button" onclick="faceRight()">face Right</button>
+  <button type="button" onclick="faceLeft()">face Left</button>
+  <button type="button" onclick="faceUp()">face Up</button>
+  <button type="button" onclick="faceDown()">face Down</button>
+</body>
+
+</html>
+
