@@ -31,6 +31,9 @@ service to send everything to: /open_manipulator/goal_joint_space_path_from_pres
 3. roslaunch open_manipulator_description open_manipulator_rviz.launch
 4. rostopic echo /joint_states
 
+http://wiki.ros.org/action/show/rosmsg?action=show&redirect=rossrv
+ros services commands
+
 
 
 http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics#turtlesim

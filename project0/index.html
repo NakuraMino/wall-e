@@ -12,7 +12,7 @@
   // global variables 
   var globalPos = [];
   var globalSec = 0;
-  var globalJ3P = 0.0; //joint3 position
+  var globalJ3P = 0.0; // joint3 position
   var globalGripper = 0.0;
 
   // Connecting to ROS
@@ -30,120 +30,121 @@
     serviceType : 'open_manipulator_msgs/SetJointPosition'
   });
 
-  var request = new ROSLIB.ServiceRequest({
-    planning_group : jointMover,
-    joint_position : {
-      joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
-      position: [0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
-      max_accelerations_scaling_factor : 0.1, 
-      max_velocity_scaling_factor : 0.1
-    },
-    path_time : 2.00
-  });
 
+
+  /*
   jointMover.callService(request, function(result) {
     console.log('Result for service call: '
     + result);
   });
-
-  
-  // Subscribing to a Topic
-
-  var poseListener = new ROSLIB.Topic({
-    ros: ros,
-    name : '/open_manipulator/joint_states',
-    messageType : 'sensor_msgs/JointState'
-  });
-  
-  poseListener.subscribe(function(message) {
-    globalPos = message.position;
-    globalSec = message.header.stamp.secs;
+  */
+  function moveLeft() {
+    var request = new ROSLIB.ServiceRequest({
+      planning_group : "none",
+      joint_position : {
+        joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
+        position: [0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
+        max_accelerations_scaling_factor : 0.1, 
+        max_velocity_scaling_factor : 0.1
+      },
+      path_time : 2.00
     });
-
-  var joint3List = new ROSLIB.Topic({
-    ros: ros,
-    name : '/open_manipulator/joint3_position/command',
-    messageType : 'std_msgs/Float64'
-  });
-  
-  joint3List.subscribe(function(message) {
-    globalJ3P = message.data;
-    //console.log("joint3pos: " + globalJ3P); 
+    jointMover.callService(request, function(result) {
+      console.log('moved Left');
     });
-
-  var gripperList = new ROSLIB.Topic({
-    ros: ros,
-    name : '/open_manipulator/gripper_position/command',
-    messageType : 'std_msgs/Float64'
-  });
-  
-  gripperList.subscribe(function(message) {
-    globalGripper = message.data;
-    if (globalGripper == -0.01) {
-      console.log("Did it change?"); 
-    }
-    //console.log("gripper: " + globalGripper); 
-    });
-
-  // Publishing a Topic
-  // ------------------
-
-  // publisher Topic object 
-  var joint1Pos = new ROSLIB.Topic({
-    ros : ros,
-    name : '/open_manipulator/joint1_position/command',
-    messageType : 'std_msgs/Float64'
-  });
-
-  var joint2Pos = new ROSLIB.Topic({
-    ros : ros,
-    name : '/open_manipulator/joint2_position/command',
-    messageType : 'std_msgs/Float64'
-  });
-
-  var joint3Pos = new ROSLIB.Topic({
-    ros : ros,
-    name : '/open_manipulator/joint3_position/command',
-    messageType : 'std_msgs/Float64'
-  });
-
-  var joint4Pos = new ROSLIB.Topic({
-    ros : ros,
-    name : '/open_manipulator/joint4_position/command',
-    messageType : 'std_msgs/Float64'
-  });
-  
-
-
-  // payload to be publish 
-  var twist = new ROSLIB.Message({
-    data : 0.0
-  });
-
-  function moveJoint3() {
-    console.log("in method: " + globalJ3P);
-    twist.data = globalJ3P + 0.1;
-    joint3Pos.publish(twist);
-    console.log("published");
   }
 
-  var gripChange = new ROSLIB.Message({
-    data : 0.0
-  });
-  
-  function changeGripper() {
-    gripChange.data = globalGripper * -1;
-    gripperList.publish(gripChange);
+  function moveRight() {
+    var request = new ROSLIB.ServiceRequest({
+      planning_group : "none",
+      joint_position : {
+        joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
+        position: [-0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
+        max_accelerations_scaling_factor : 0.1, 
+        max_velocity_scaling_factor : 0.1
+      },
+      path_time : 2.00
+    });
+    jointMover.callService(request, function(result) {
+      console.log('moved Right');
+    });
   }
 
+  function moveUp() {
+    var request = new ROSLIB.ServiceRequest({
+      planning_group : "none",
+      joint_position : {
+        joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
+        position: [0.0, 0.0, -0.1, 0.0, 0.0, 0.0],
+        max_accelerations_scaling_factor : 0.1, 
+        max_velocity_scaling_factor : 0.1
+      },
+      path_time : 2.00
+    });
+    jointMover.callService(request, function(result) {
+      console.log('moved up');
+    });
+  }
 
+  function moveDown() {
+    var request = new ROSLIB.ServiceRequest({
+      planning_group : "none",
+      joint_position : {
+        joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
+        position: [0.0, 0.0, 0.1, 0.0, 0.0, 0.0],
+        max_accelerations_scaling_factor : 0.1, 
+        max_velocity_scaling_factor : 0.1
+      },
+      path_time : 2.00
+    });
+    jointMover.callService(request, function(result) {
+      console.log('moved down');
+    });
+  }
+
+  function moveForward() {
+    var request = new ROSLIB.ServiceRequest({
+      planning_group : "none",
+      joint_position : {
+        joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
+        position: [0.0, 0.1, 0.0, 0.0, 0.0, 0.0],
+        max_accelerations_scaling_factor : 0.1, 
+        max_velocity_scaling_factor : 0.1
+      },
+      path_time : 2.00
+    });
+    jointMover.callService(request, function(result) {
+      console.log('moved forward');
+    });
+  }
+
+  function moveBackward() {
+    var request = new ROSLIB.ServiceRequest({
+      planning_group : "none",
+      joint_position : {
+        joint_name : ['gripper', 'gripper_sub', 'joint1', 'joint2', 'joint3', 'joint4'], 
+        position: [0.0, -0.1, 0.0, 0.0, 0.0, 0.0],
+        max_accelerations_scaling_factor : 0.1, 
+        max_velocity_scaling_factor : 0.1
+      },
+      path_time : 2.00
+    });
+    jointMover.callService(request, function(result) {
+      console.log('moved backward');
+    });
+  }
 
 </script>
 
 </head>
 
 <body>
-    <button type="button" onclick="changeGripper()">open/close gripper</button> 
+    <button type="button" onclick="moveLeft()">move left</button> 
+    <button type="button" onclick="moveRight()">move right</button> 
+    <button type="button" onclick="moveUp()">move up</button> 
+    <button type="button" onclick="moveDown()">move down</button> 
+    <button type="button" onclick="moveForward()">move forward</button> 
+    <button type="button" onclick="moveBackward()">move backward</button> 
 
 </body>
 
