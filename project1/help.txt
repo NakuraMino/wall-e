@@ -1,0 +1,7 @@
+Installing Node.js using NVM
+https://www.youtube.com/watch?v=a3zwjm61Iyk
+1. https://github.com/nvm-sh/nvm#install-script
+> 1.1. curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+> 1.2. command -v nvm // to check if successfully installed
+> 1.3. nvm install --lts // install the latest LTS version 
+> 1.4. nvm use --lts // use the latest version 
